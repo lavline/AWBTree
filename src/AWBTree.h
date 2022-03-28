@@ -14,8 +14,6 @@ class AWBTree {
 private:
 	vector<vector<bptree*>> ltree;
 	vector<vector<bptree*>> htree;
-	vector<IntervalSub> subList;
-	vector<Pub> pubList;
 
 	uint32_t dim;  // 维度
 	uint32_t atts; // 属性数
@@ -29,10 +27,15 @@ private:
 	double width;  // 宽度单元大小
 	uint16_t dPoint; // 任务切分点
 	uint32_t subs; //订阅数
+	uint32_t pubs; //
 
 public:
-	AWBTree(uint32_t _dim, uint32_t _atts, uint32_t _subs, uint16_t _width_size, uint16_t _branch, int _valDom, uint16_t _dPoint)
-		:dim(_dim), atts(_atts), subs(_subs), width_size(_width_size), branch(_branch), width(_valDom / _width_size),
+	vector<IntervalSub> subList;
+	vector<Pub> pubList;
+
+public:
+	AWBTree(uint32_t _dim, uint32_t _atts, uint32_t _subs, uint32_t _pubs, uint16_t _width_size, uint16_t _branch, int _valDom, uint16_t _dPoint)
+		:dim(_dim), atts(_atts), subs(_subs), pubs(_pubs), width_size(_width_size), branch(_branch), width(_valDom / _width_size),
 		valDom(_valDom), sig(_dim, vector<bool>(_width_size, 0)), counter(_subs, 0), dPoint(_dPoint* _width_size)
 	{
 		ltree.resize(dim); htree.resize(dim);
@@ -53,11 +56,11 @@ public:
 
 	void forward(const Pub& pub, int& matchSubs);
 	void forward_o(const Pub& pub, int& matchSubs);
-	void backward();
-	void backward_o();
-	void hybrid();
-	void hybrid_a();
+	void backward(const Pub& pub, int& matchSubs);
+	void backward_o(const Pub& pub, int& matchSubs);
+	void hybrid(const Pub& pub, int& matchSubs);
+	void hybrid_a(const Pub& pub, int& matchSubs);
 
 	size_t memory();
-	bool check();
+	bool check(vector<uint32_t>& matchSubList);
 };

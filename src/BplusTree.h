@@ -168,7 +168,7 @@ namespace BplusTree {
 		}
 		iterator upper_bound(const key_type key) const {
 			iterator it = lower_bound(key);
-			if (it != this->end) ++it;
+			if (it != this->end && it.node->key[it.index] == key) ++it;
 			return it;
 		}
 

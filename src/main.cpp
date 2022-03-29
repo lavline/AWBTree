@@ -1,6 +1,6 @@
 #include <iostream>
 //#include <random>
-#include "chrono_time.h"
+//#include "chrono_time.h"
 #include "AWBTree.h"
 
 using namespace std;
@@ -21,14 +21,14 @@ int main()
     int valDom = 1000;   // cardinality of values.
     double alpha = 0; // parameter for zipf distribution.
     double width = 0.7; // width of a predicate.
-    int genRand = 0;
+    int genRand = 1;
     float dPoint = 0.2;//partition point
-    uint16_t branch = 80;
+    uint16_t branch = 100;
     uint16_t w_size = 40; //width cell size
     
     AWBTree a(atts, m, subs, pubs, w_size, branch, valDom, dPoint);
 
-    string dir = "/home/lzhy/.vs/genData-1.0/";
+    string dir = "/data/hq/.vs/genData-1.0/";
     string sub_file = dir + "sub-" + to_string(totalsubs / 1000) + "K-" + to_string(atts) + "D-" + to_string(cons) + "A-" + to_string(attDis) + "Ad-"
         + to_string(valDis) + "Vd-" + to_string((int)(alpha * 10)) + "al-" + to_string((int)(width * 10)) + "W-" + to_string(genRand) + "R.txt";
     string pub_file = dir + "pub-" + to_string(atts) + "D-" + to_string(m) + "A-" + to_string(attDis) + "Ad-"
@@ -36,8 +36,8 @@ int main()
     cout << sub_file << endl;
     cout << pub_file << endl;
 
-    a.readSubs(sub_file);
-    a.readPus(pub_file);
+    if (!a.readSubs(sub_file)) return -1;
+    if (!a.readPus(pub_file)) return -1;
 
     vector<double> insertTimeList;
     vector<double> matchTimeList;
@@ -54,11 +54,15 @@ int main()
         int64_t insertTime = subStart.elapsed_nano(); // Record inserting time in nanosecond.
         insertTimeList.push_back((double)insertTime / 1000000);
     }
+    a.setbits();
     double avgInsertTime = 0;
     for (int i = 0; i < insertTimeList.size(); i++)avgInsertTime += insertTimeList[i];
     avgInsertTime /= insertTimeList.size();
 
     cout << "insert complete! avgInsertTime = " << avgInsertTime << "ms\n";
+
+    double mem = a.memory();
+    cout << "memory cost " << mem / 1024 / 1024 << "MB\n";
 
     // match
     for (int i = 0; i < pubs; i++)
@@ -66,8 +70,9 @@ int main()
         int matchSubs = 0;                              // Record the number of matched subscriptions.
         Timer matchStart;
 
-        //a.forward_o(a.pubList[i], matchSubs);
-        a.backward_o(a.pubList[i], matchSubs);
+        a.forward_o(a.pubList[i], matchSubs);
+        //a.backward(a.pubList[i], matchSubs);
+        //a.hybrid(a.pubList[i], matchSubs);
 
         int64_t eventTime = matchStart.elapsed_nano();  // Record matching time in nanosecond.
         matchTimeList.push_back((double)eventTime / 1000000);

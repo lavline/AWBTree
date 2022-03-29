@@ -7,14 +7,17 @@
 #include "ThreadPool.h"
 #define SUB_NUM 1000000
 
-using bptree = BplusTree::bplus_tree<double, Element>;
-using bptree_node = BplusTree::Node<double, Element>;
-using tree_iter = BplusTree::bplus_tree<double, Element>::iterator;
+using lbptree = BplusTree::bplus_tree<int, lowTreeEle>;
+using lbptree_node = BplusTree::Node<int, lowTreeEle>;
+using ltree_iter = BplusTree::bplus_tree<int, lowTreeEle>::iterator;
+using hbptree = BplusTree::bplus_tree<int, int>;
+using hbptree_node = BplusTree::Node<int, int>;
+using htree_iter = BplusTree::bplus_tree<int, int>::iterator;
 
 class AWBTree {
 private:
-	vector<vector<bptree*>> ltree;
-	vector<vector<bptree*>> htree;
+	vector<vector<lbptree*>> ltree;
+	vector<vector<hbptree*>> htree;
 
 	uint32_t dim;  // Œ¨∂»
 	uint32_t atts; //  Ù–‘ ˝
@@ -44,8 +47,8 @@ public:
 		for (int i = 0; i < dim; i++) {
 			ltree[i].resize(width_size); htree[i].resize(width_size);
 			for (int j = 0; j < width_size; j++) {
-				ltree[i][j] = new bptree(branch, new bptree_node);
-				htree[i][j] = new bptree(branch, new bptree_node);
+				ltree[i][j] = new lbptree(branch, new lbptree_node);
+				htree[i][j] = new hbptree(branch, new hbptree_node);
 			}
 		}
 	}

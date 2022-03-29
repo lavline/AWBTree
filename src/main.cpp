@@ -18,11 +18,11 @@ int main()
     int m = 40;        // number of constraints in one pub.
     int attDis = 0;   // the distribution of attributes in subs and pubs. 0:uniform distribution | 1:zipf distribution
     int valDis = 0;   // the distribution of values in subs and pubs. 0:uniform, 1: both zipf, -1: sub zipf but pub uniform
-    int valDom = 1000;   // cardinality of values.
+    int valDom = 1000000;   // cardinality of values.
     double alpha = 0; // parameter for zipf distribution.
     double width = 0.7; // width of a predicate.
     int genRand = 1;
-    float dPoint = 0.2;//partition point
+    float dPoint = 0.25;//partition point
     uint16_t branch = 2000;
     uint16_t w_size = 40; //width cell size
     

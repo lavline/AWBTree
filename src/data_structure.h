@@ -26,6 +26,16 @@ struct Element{
     }
 };
 
+struct lowTreeEle
+{
+    int highVal;
+    int subID;
+    bool operator!=(const lowTreeEle b) const
+    {
+        return this->subID != b.subID;
+    }
+};
+
 struct Pair{
     int att;
     int value;

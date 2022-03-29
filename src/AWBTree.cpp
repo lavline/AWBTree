@@ -81,13 +81,13 @@ void AWBTree::forward(const Pub& pub, int& matchSubs)
                 tree_iter sPoint = ltree[pred_att][i]->lower_bound(val - w_min);
                 tree_iter end = ltree[pred_att][i]->upper_bound(val);
                 for (; it != sPoint; ++it) {
-                    for (auto& ele : it.get_value_list())
-                        if (!(val > ele.highVal))
-                            if (!(--c[ele.subID]))bits.set(ele.subID);
+                    Element ele = it.get_value();
+                    if (!(val > ele.highVal))
+                        if (!(--c[ele.subID]))bits.set(ele.subID);
                 }
                 for (; it != end; ++it) {
-                    for (auto& ele : it.get_value_list())
-                        if (!(--c[ele.subID]))bits.set(ele.subID);
+                    Element ele = it.get_value();
+                    if (!(--c[ele.subID]))bits.set(ele.subID);
                 }
             }
         }
@@ -110,22 +110,23 @@ void AWBTree::forward_o(const Pub& pub, int& matchSubs)
                     if (!(val > w_min)) {
                         tree_iter it = ltree[pred_att][i]->begin;
                         tree_iter end = ltree[pred_att][i]->upper_bound(val);
-                        for (; it != end; ++it)
-                            for (auto& ele : it.get_value_list())
-                                if (!(--c[ele.subID]))bits.set(ele.subID);
+                        for (; it != end; ++it) {
+                            Element ele = it.get_value();
+                            if (!(--c[ele.subID]))bits.set(ele.subID);
+                        }
                     }
                     else if (val < w_max) {
                         tree_iter it = ltree[pred_att][i]->begin;
                         tree_iter sPoint = ltree[pred_att][i]->lower_bound(val - w_min);
                         tree_iter end = ltree[pred_att][i]->upper_bound(val);
                         for (; it != sPoint; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(val > ele.highVal))
-                                    if (!(--c[ele.subID]))bits.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(val > ele.highVal))
+                                if (!(--c[ele.subID]))bits.set(ele.subID);
                         }
                         for (; it != end; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(--c[ele.subID]))bits.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(--c[ele.subID]))bits.set(ele.subID);
                         }
                     }
                     else {
@@ -133,13 +134,13 @@ void AWBTree::forward_o(const Pub& pub, int& matchSubs)
                         tree_iter sPoint = ltree[pred_att][i]->lower_bound(val - w_min);
                         tree_iter end = ltree[pred_att][i]->upper_bound(val);
                         for (; it != sPoint; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(val > ele.highVal))
-                                    if (!(--c[ele.subID]))bits.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(val > ele.highVal))
+                                if (!(--c[ele.subID]))bits.set(ele.subID);
                         }
                         for (; it != end; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(--c[ele.subID]))bits.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(--c[ele.subID]))bits.set(ele.subID);
                         }
                     }
                 }
@@ -147,22 +148,23 @@ void AWBTree::forward_o(const Pub& pub, int& matchSubs)
                     if (!(val < v_max)) {
                         tree_iter it = htree[pred_att][i]->lower_bound(val);
                         tree_iter end = htree[pred_att][i]->end;
-                        for (; it != end; ++it)
-                            for (auto& ele : it.get_value_list())
-                                if (!(--c[ele.subID]))bits.set(ele.subID);
+                        for (; it != end; ++it) {
+                            Element ele = it.get_value();
+                            if (!(--c[ele.subID]))bits.set(ele.subID);
+                        }
                     }
                     else if (val > (valDom - w_max)) {
                         tree_iter it = ltree[pred_att][i]->lower_bound(val);
                         tree_iter sPoint = ltree[pred_att][i]->upper_bound(val + w_min);
                         tree_iter end = ltree[pred_att][i]->end;
                         for (; it != sPoint; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(--c[ele.subID]))bits.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(--c[ele.subID]))bits.set(ele.subID);
                         }
                         for (; it != end; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(val > ele.highVal))
-                                    if (!(--c[ele.subID]))bits.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(val > ele.highVal))
+                                if (!(--c[ele.subID]))bits.set(ele.subID);
                         }
                     }
                     else {
@@ -170,13 +172,13 @@ void AWBTree::forward_o(const Pub& pub, int& matchSubs)
                         tree_iter sPoint = ltree[pred_att][i]->upper_bound(val + w_min);
                         tree_iter end = ltree[pred_att][i]->lower_bound(val + w_max);
                         for (; it != sPoint; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(--c[ele.subID]))bits.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(--c[ele.subID]))bits.set(ele.subID);
                         }
                         for (; it != end; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(val > ele.highVal))
-                                    if (!(--c[ele.subID]))bits.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(val > ele.highVal))
+                                if (!(--c[ele.subID]))bits.set(ele.subID);
                         }
                     }
                 }
@@ -197,9 +199,9 @@ void AWBTree::backward(const Pub& pub, int& matchSubs)
                 tree_iter itlow = ltree[pred_att][i]->upper_bound(val);
                 tree_iter ithigh = htree[pred_att][i]->lower_bound(val);
                 for (; itlow != ltree[pred_att][i]->end; ++itlow)
-                    for (auto& ele : itlow.get_value_list())bits.set(ele.subID);
+                    bits.set(itlow.get_value().subID);
                 for (tree_iter it = htree[pred_att][i]->begin; it != ithigh; ++it)
-                    for (auto& ele : it.get_value_list())bits.set(ele.subID);
+                    bits.set(it.get_value().subID);
             }
         }
     }
@@ -219,9 +221,9 @@ void AWBTree::backward_o(const Pub& pub, int& matchSubs)
                 tree_iter itlow = ltree[pred_att][i]->upper_bound(val);
                 tree_iter ithigh = htree[pred_att][i]->lower_bound(val);
                 for (; itlow != ltree[pred_att][i]->end; ++itlow)
-                    for (auto& ele : itlow.get_value_list())bits.set(ele.subID);
+                    bits.set(itlow.get_value().subID);
                 for (tree_iter it = htree[pred_att][i]->begin; it != ithigh; ++it)
-                    for (auto& ele : it.get_value_list())bits.set(ele.subID);
+                    bits.set(it.get_value().subID);
             }
         }
         for (; i < width_size; ++i) {
@@ -231,12 +233,12 @@ void AWBTree::backward_o(const Pub& pub, int& matchSubs)
                 if (!(val > v_max)) {
                     tree_iter itlow = ltree[pred_att][i]->upper_bound(val);
                     for (; itlow != ltree[pred_att][i]->end; ++itlow)
-                        for (auto& ele : itlow.get_value_list())bits.set(ele.subID);
+                        bits.set(itlow.get_value().subID);
                 }
                 else if (!(val < v_min)) {
                     tree_iter ithigh = htree[pred_att][i]->lower_bound(val);
                     for (tree_iter it = htree[pred_att][i]->begin; it != ithigh; ++it)
-                        for (auto& ele : it.get_value_list())bits.set(ele.subID);
+                        bits.set(it.get_value().subID);
                 }
             }
         }
@@ -262,22 +264,23 @@ void AWBTree::hybrid(const Pub& pub, int& matchSubs)
                     if (!(val > w_min)) {
                         tree_iter it = ltree[pred_att][i]->begin;
                         tree_iter end = ltree[pred_att][i]->upper_bound(val);
-                        for (; it != end; ++it)
-                            for (auto ele : it.get_value_list())
-                                if (!(--c[ele.subID]))bits_f.set(ele.subID);
+                        for (; it != end; ++it) {
+                            Element ele = it.get_value();
+                            if (!(--c[ele.subID]))bits_f.set(ele.subID);
+                        }
                     }
                     else if (val < w_max) {
                         tree_iter it = ltree[pred_att][i]->begin;
                         tree_iter sPoint = ltree[pred_att][i]->lower_bound(val - w_min);
                         tree_iter end = ltree[pred_att][i]->upper_bound(val);
                         for (; it != sPoint; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(val > ele.highVal))
-                                    if (!(--c[ele.subID]))bits_f.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(val > ele.highVal))
+                                if (!(--c[ele.subID]))bits_f.set(ele.subID);
                         }
                         for (; it != end; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(--c[ele.subID]))bits_f.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(--c[ele.subID]))bits_f.set(ele.subID);
                         }
                     }
                     else {
@@ -285,13 +288,13 @@ void AWBTree::hybrid(const Pub& pub, int& matchSubs)
                         tree_iter sPoint = ltree[pred_att][i]->lower_bound(val - w_min);
                         tree_iter end = ltree[pred_att][i]->upper_bound(val);
                         for (; it != sPoint; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(val > ele.highVal))
-                                    if (!(--c[ele.subID]))bits_f.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(val > ele.highVal))
+                                if (!(--c[ele.subID]))bits_f.set(ele.subID);
                         }
                         for (; it != end; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(--c[ele.subID]))bits_f.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(--c[ele.subID]))bits_f.set(ele.subID);
                         }
                     }
                 }
@@ -299,22 +302,23 @@ void AWBTree::hybrid(const Pub& pub, int& matchSubs)
                     if (!(val < v_max)) {
                         tree_iter it = htree[pred_att][i]->lower_bound(val);
                         tree_iter end = htree[pred_att][i]->end;
-                        for (; it != end; ++it)
-                            for (auto ele : it.get_value_list())
-                                if (!(--c[ele.subID]))bits_f.set(ele.subID);
+                        for (; it != end; ++it) {
+                            Element ele = it.get_value();
+                            if (!(--c[ele.subID]))bits_f.set(ele.subID);
+                        }
                     }
                     else if (val > (valDom - w_max)) {
                         tree_iter it = ltree[pred_att][i]->lower_bound(val);
                         tree_iter sPoint = ltree[pred_att][i]->upper_bound(val + w_min);
                         tree_iter end = ltree[pred_att][i]->end;
                         for (; it != sPoint; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(--c[ele.subID]))bits_f.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(--c[ele.subID]))bits_f.set(ele.subID);
                         }
                         for (; it != end; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(val > ele.highVal))
-                                    if (!(--c[ele.subID]))bits_f.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(val > ele.highVal))
+                                if (!(--c[ele.subID]))bits_f.set(ele.subID);
                         }
                     }
                     else {
@@ -322,13 +326,13 @@ void AWBTree::hybrid(const Pub& pub, int& matchSubs)
                         tree_iter sPoint = ltree[pred_att][i]->upper_bound(val + w_min);
                         tree_iter end = ltree[pred_att][i]->lower_bound(val + w_max);
                         for (; it != sPoint; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(--c[ele.subID]))bits_f.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(--c[ele.subID]))bits_f.set(ele.subID);
                         }
                         for (; it != end; ++it) {
-                            for (auto& ele : it.get_value_list())
-                                if (!(val > ele.highVal))
-                                    if (!(--c[ele.subID]))bits_f.set(ele.subID);
+                            Element ele = it.get_value();
+                            if (!(val > ele.highVal))
+                                if (!(--c[ele.subID]))bits_f.set(ele.subID);
                         }
                     }
                 }
@@ -340,9 +344,9 @@ void AWBTree::hybrid(const Pub& pub, int& matchSubs)
                 tree_iter itlow = ltree[pred_att][i]->upper_bound(val);
                 tree_iter ithigh = htree[pred_att][i]->lower_bound(val);
                 for (; itlow != ltree[pred_att][i]->end; ++itlow)
-                    for (auto ele : itlow.get_value_list())bits_b.set(ele.subID);
+                    bits_b.set(itlow.get_value().subID);
                 for (tree_iter it = htree[pred_att][i]->begin; it != ithigh; ++it)
-                    for (auto ele : it.get_value_list())bits_b.set(ele.subID);
+                    bits_b.set(it.get_value().subID);
             }
         }
         for (; i < width_size; ++i) {
@@ -352,12 +356,12 @@ void AWBTree::hybrid(const Pub& pub, int& matchSubs)
                 if (!(val > v_max)) {
                     tree_iter itlow = ltree[pred_att][i]->upper_bound(val);
                     for (; itlow != ltree[pred_att][i]->end; ++itlow)
-                        for (auto ele : itlow.get_value_list())bits_b.set(ele.subID);
+                        bits_b.set(itlow.get_value().subID);
                 }
                 else if (!(val < v_min)) {
                     tree_iter ithigh = htree[pred_att][i]->lower_bound(val);
                     for (tree_iter it = htree[pred_att][i]->begin; it != ithigh; ++it)
-                        for (auto ele : it.get_value_list())bits_b.set(ele.subID);
+                        bits_b.set(it.get_value().subID);
                 }
             }
         }

@@ -23,7 +23,7 @@ int main()
     double width = 0.7; // width of a predicate.
     int genRand = 1;
     float dPoint = 0.2;//partition point
-    uint16_t branch = 100;
+    uint16_t branch = 2000;
     uint16_t w_size = 40; //width cell size
     
     AWBTree a(atts, m, subs, pubs, w_size, branch, valDom, dPoint);
@@ -70,8 +70,8 @@ int main()
         int matchSubs = 0;                              // Record the number of matched subscriptions.
         Timer matchStart;
 
-        a.forward_o(a.pubList[i], matchSubs);
-        //a.backward(a.pubList[i], matchSubs);
+        //a.forward_o(a.pubList[i], matchSubs);
+        a.backward(a.pubList[i], matchSubs);
         //a.hybrid(a.pubList[i], matchSubs);
 
         int64_t eventTime = matchStart.elapsed_nano();  // Record matching time in nanosecond.
@@ -97,7 +97,7 @@ int main()
     }
     outputfile.close();
     
-    //a.check(matchSubList);
+    a.check(matchSubList);
 
     return 0;
 }

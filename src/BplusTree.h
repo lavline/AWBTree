@@ -13,7 +13,7 @@ namespace BplusTree {
 		friend class bplus_tree;
 		bool NON_LEAF;
 		std::vector<key_type> key;  // key
-		std::vector<std::vector<value_type>> value;  // value: each value type have a value list to store the value with same key
+		std::vector<value_type> value;  // value
 		std::vector<Node<key_type, value_type>*> child;
 		//class Node<key_type, value_type>* parent;
 		Node<key_type, value_type>* next;
@@ -21,7 +21,7 @@ namespace BplusTree {
 		Node() : next(nullptr), NON_LEAF(false) {
 			//parent = nullptr;
 		}
-		Node(const std::vector<key_type>& _key, const std::vector<std::vector<value_type>>& _value, const int mid)
+		Node(const std::vector<key_type>& _key, const std::vector<value_type>& _value, const int mid)
 			:key(_key.begin() + mid + 1, _key.end()), value(_value.begin() + mid + 1, _value.end()), next(nullptr), NON_LEAF(false) {}
 		Node(const std::vector<key_type>& _key, const std::vector<Node<key_type, value_type>*>& _child, const int mid)
 			:key(_key.begin() + mid + 1, _key.end()), child(_child.begin() + mid + 1, _child.end()), next(nullptr), NON_LEAF(true) {}
@@ -48,8 +48,8 @@ namespace BplusTree {
 	private:
 		size_t nodes_memory(Node<key_type, value_type>* node) {
 			size_t mem = sizeof(Node<key_type, value_type>) + node->key.size() * sizeof(key_type)
-				+ node->child.size() * sizeof(Node<key_type, value_type>*) + node->value.size() * sizeof(std::vector<value_type>);
-			for (int i = 0; i < node->value.size(); i++)mem += node->value[i].size() * sizeof(value_type);
+				+ node->child.size() * sizeof(Node<key_type, value_type>*);
+			mem += node->value.size() * sizeof(value_type);
 			for (int i = 0; i < node->child.size(); i++)mem += nodes_memory(node->child[i]);
 			return mem;
 		}
@@ -59,6 +59,7 @@ namespace BplusTree {
 			Node<key_type, value_type>* node = root;
 			return mem + nodes_memory(root);
 		}
+
 		void insert(const key_type key, const value_type& value) {
 			// insert key to leaf node
 			Node<key_type, value_type>* node = root;
@@ -77,17 +78,16 @@ namespace BplusTree {
 			}
 			// find key
 			while (i < node_size && key > node->key[i])++i;
-			// if not exist the key, build a new <key, value> pair
-			if (node_size == 0|| i == node_size || key != node->key[i]) {
+			// build a new <key, value> pair
+			{
 				node->key.insert(node->key.begin() + i, key);
-				node->value.insert(node->value.begin() + i, std::vector<value_type>(1, value));
+				node->value.insert(node->value.begin() + i, value);
 				// node split from leaf node if need
 				int mid = min_branch;
 				if (node_size + 1 == branch) {
 					key_type mid_key = node->key[mid];
 					// create right leaf node
 					Node<key_type, value_type>* new_node = new Node<key_type, value_type>(node->key, node->value, mid);
-					//new_node->value.insert(new_node->value.end(), node->value.begin() + mid + 1, node->value.end());
 					new_node->next = node->next;
 					node->next = new_node;
 					// resize left node
@@ -142,7 +142,6 @@ namespace BplusTree {
 					}
 				}
 			}
-			else node->value[i].emplace_back(value);
 		}
 		void erase(){}
 
@@ -168,7 +167,7 @@ namespace BplusTree {
 		}
 		iterator upper_bound(const key_type key) const {
 			iterator it = lower_bound(key);
-			if (it != this->end && it.node->key[it.index] == key) ++it;
+			while (it != this->end && it.node->key[it.index] == key) ++it;
 			return it;
 		}
 
@@ -194,7 +193,7 @@ namespace BplusTree {
 					throw std::out_of_range("B+Tree: iterator is out of range");
 				return this->node->key[index];
 			}
-			std::vector<value_type>& get_value_list() const {
+			value_type& get_value() const {
 				if (node == nullptr)
 					throw std::out_of_range("B+Tree: iterator is out of range");
 				return this->node->value[index];

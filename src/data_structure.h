@@ -20,6 +20,10 @@ struct IntervalSub{
 struct Element{
     int lowVal, highVal;
     int subID;
+    bool operator!=(const Element b) const
+    {
+        return this->subID != b.subID;
+    }
 };
 
 struct Pair{

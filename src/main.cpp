@@ -70,8 +70,8 @@ int main()
         int matchSubs = 0;                              // Record the number of matched subscriptions.
         Timer matchStart;
 
-        //a.forward(a.pubList[i], matchSubs);
-        //a.backward(a.pubList[i], matchSubs);
+        a.forward_o(a.pubList[i], matchSubs);
+        //a.backward_o(a.pubList[i], matchSubs);
         //a.hybrid(a.pubList[i], matchSubs);
 
         int64_t eventTime = matchStart.elapsed_nano();  // Record matching time in nanosecond.

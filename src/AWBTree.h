@@ -1,11 +1,14 @@
 #pragma once
 #include <bitset>
 #include <fstream>
+#include <mutex>
+#include <atomic>
 #include "BplusTree.h"
 #include "chrono_time.h"
 #include "data_structure.h"
 #include "ThreadPool.h"
 #define SUB_NUM 1000000
+
 
 //using lbptree = BplusTree::bplus_tree<int, lowTreeEle>;
 //using lbptree_node = BplusTree::Node<int, lowTreeEle>;
@@ -14,8 +17,10 @@
 //using hbptree_node = BplusTree::Node<int, int>;
 //using htree_iter = BplusTree::bplus_tree<int, int>::iterator;
 using lbptree = BplusTree::Tree<int, lowTreeEle>;
+using lbptree_node = BplusTree::Node<int, lowTreeEle>;
 using ltree_iter = BplusTree::Tree<int, lowTreeEle>::iterator;
 using hbptree = BplusTree::Tree<int, int>;
+using hbptree_node = BplusTree::Node<int, int>;
 using htree_iter = BplusTree::Tree<int, int>::iterator;
 
 class AWBTree {
@@ -30,6 +35,7 @@ private:
 	vector<uint16_t> pdr;  // 记录正向匹配需要匹配的谓词数目
 	vector<vector<bool>> sig;
 	vector<uint16_t> counter;
+	//vector<atomic_uint16_t> atomic_counter;
 	bitset<SUB_NUM> bit_forward;
 
 	int valDom; // 值域空间
@@ -68,10 +74,13 @@ public:
 
 	void forward(const Pub& pub, int& matchSubs);
 	void forward_o(const Pub& pub, int& matchSubs);
+	void forward_p(const Pub& pub, int& matchSubs, ThreadPool& pool, int pdegree);
 	void backward(const Pub& pub, int& matchSubs);
 	void backward_o(const Pub& pub, int& matchSubs);
+	void backward_p(const Pub& pub, int& matchSubs, ThreadPool& pool, int pdegree);
 	void hybrid(const Pub& pub, int& matchSubs);
 	void hybrid_a(const Pub& pub, int& matchSubs);
+	void hybrid_p(const Pub& pub, int& matchSubs, ThreadPool& pool, int pdegree);
 
 	size_t memory();
 	bool check(vector<uint32_t>& matchSubList);

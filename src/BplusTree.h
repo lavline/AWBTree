@@ -820,7 +820,7 @@ namespace BplusTree {
             {
                 for (i = 0; i < n->keys.size(); i++)
                 {
-                    if (key < n->keys[i])
+                    if (key <= n->keys[i])
                         break;
                 }
 
@@ -914,7 +914,7 @@ namespace BplusTree {
             {
                 for (i = 0; i < n->keys.size(); i++)
                 {
-                    if (key < n->keys[i])
+                    if (key <= n->keys[i])
                         break;
                 }
 
@@ -1032,7 +1032,7 @@ namespace BplusTree {
         }
 
         iterator parallel_upper_bound(const key_type& key,
-            vector<Node<key_type, val_type>*>& realtive_nodes) const
+            vector<void*>& realtive_nodes) const
         {
             iterator it = lower_bound(key);
             if (it == end())
@@ -1051,7 +1051,7 @@ namespace BplusTree {
         }
 
         iterator parallel_lower_bound(const key_type& key,
-            vector<Node<key_type, val_type>*>& realtive_nodes) const
+            vector<void*>& realtive_nodes) const
         {
             Node<key_type, val_type>* n = root;
             Node<key_type, val_type>* pre_n = nullptr;
@@ -1062,7 +1062,7 @@ namespace BplusTree {
             {
                 for (i = 0; i < n->keys.size(); i++)
                 {
-                    if (key < n->keys[i])
+                    if (key <= n->keys[i])
                         break;
                 }
 

@@ -1,4 +1,6 @@
 #include <iostream>
+#include <sched.h>
+#include <unistd.h>
 //#include <random>
 //#include "chrono_time.h"
 #include "AWBTree.h"
@@ -7,6 +9,25 @@ using namespace std;
 
 int main()
 {
+    //int threadNum = 64;
+    //int cpus = 0;
+    //cpu_set_t mask;
+    //cpu_set_t get;
+
+    //cpus = sysconf(_SC_NPROCESSORS_CONF);
+    //cout << cpus << endl;
+
+    //CPU_ZERO(&mask);
+    //for (int i = 0; i < threadNum; i++)CPU_SET(i, &mask);
+    ////for (int i = 52; i < 78; i++)CPU_SET(i, &mask);
+
+    //if (sched_setaffinity(0, sizeof(mask), &mask) == -1) {
+    //    //printf("Set CPU affinity failue, ERROR:%s\n", strerror(errno));
+    //    return -1;
+    //}
+    //usleep(1000);
+    
+    
     /*std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(1, 10000);*/
@@ -28,7 +49,8 @@ int main()
     
     AWBTree a(atts, m, subs, pubs, w_size, branch, valDom, dPoint);
 
-    string dir = "/data/hq/.vs/genData-1.0/";
+    //string dir = "/data/hq/.vs/genData-1.0/";
+    string dir = "../genData-1.0/";
     string sub_file = dir + "sub-" + to_string(totalsubs / 1000) + "K-" + to_string(atts) + "D-" + to_string(cons) + "A-" + to_string(attDis) + "Ad-"
         + to_string(valDis) + "Vd-" + to_string((int)(alpha * 10)) + "al-" + to_string((int)(width * 10)) + "W-" + to_string(genRand) + "R.txt";
     string pub_file = dir + "pub-" + to_string(atts) + "D-" + to_string(m) + "A-" + to_string(attDis) + "Ad-"
@@ -64,6 +86,7 @@ int main()
     double mem = a.memory();
     cout << "memory cost " << mem / 1024 / 1024 << "MB\n";
 
+    //ThreadPool pool(threadNum);
     // match
     for (int i = 0; i < pubs; i++)
     {
@@ -71,7 +94,9 @@ int main()
         Timer matchStart;
 
         a.forward_o(a.pubList[i], matchSubs);
+        //a.forward(a.pubList[i], matchSubs);
         //a.backward_o(a.pubList[i], matchSubs);
+        //a.backward_p(a.pubList[i], matchSubs, pool, pdegree);
         //a.hybrid(a.pubList[i], matchSubs);
 
         int64_t eventTime = matchStart.elapsed_nano();  // Record matching time in nanosecond.
@@ -83,10 +108,38 @@ int main()
     double avgMatchTime = 0;
     for (int i = 0; i < matchTimeList.size(); i++)avgMatchTime += matchTimeList[i];
     avgMatchTime /= matchTimeList.size();
-
     cout << "match complete! avgMatchTime = " << avgMatchTime << "ms\n";
 
-    string outputFileName = "match_time.txt";
+    // parallel
+    //for (int pdegree = 1; pdegree <= threadNum; pdegree = pdegree << 1)
+    //{
+    //    matchTimeList.clear();
+    //    matchSubList.clear();
+    //    for (int i = 0; i < pubs; i++)
+    //    {
+    //        int matchSubs = 0;                              // Record the number of matched subscriptions.
+    //        Timer matchStart;
+
+    //        //a.forward_o(a.pubList[i], matchSubs);
+    //        //a.forward_p(a.pubList[i], matchSubs, pool, pdegree);
+    //        //a.backward_o(a.pubList[i], matchSubs);
+    //        //a.backward_p(a.pubList[i], matchSubs, pool, pdegree);
+    //        //a.hybrid(a.pubList[i], matchSubs);
+    //        a.hybrid_p(a.pubList[i], matchSubs, pool, pdegree);
+
+    //        int64_t eventTime = matchStart.elapsed_nano();  // Record matching time in nanosecond.
+    //        matchTimeList.push_back((double)eventTime / 1000000);
+    //        matchSubList.push_back(matchSubs);
+
+    //        //cout << matchSubs << endl;
+    //    }
+    //    double avgMatchTime = 0;
+    //    for (int i = 0; i < matchTimeList.size(); i++)avgMatchTime += matchTimeList[i];
+    //    avgMatchTime /= matchTimeList.size();
+    //    cout << pdegree << " match complete! avgMatchTime = " << avgMatchTime << " ms\n";
+    //}
+
+    /*string outputFileName = "match_time.txt";
     ofstream outputfile(outputFileName, ios::out);
     if (!outputfile) {
         cout << "error opening destination file." << endl;
@@ -95,7 +148,7 @@ int main()
     for (int i = 0; i < pubs; i++) {
         outputfile << matchSubList[i] << " " << matchTimeList[i] << "\n";
     }
-    outputfile.close();
+    outputfile.close();*/
     
     a.check(matchSubList);
 

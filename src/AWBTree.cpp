@@ -52,7 +52,8 @@ bool AWBTree::readPus(string file)
 void AWBTree::insert(IntervalSub sub)
 {
     int id = sub.id;
-    counter[id] = sub.size; atomic_counter[id] = sub.size;
+    counter[id] = sub.size; 
+    //atomic_counter[id] = sub.size;
     for (auto pred : sub.pred) {
         int pred_att = pred.att;
         int lowVal = pred.lowVal; int highVal = pred.highVal;
